@@ -1,21 +1,42 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import {
-  FaHeart,
   FaShoppingCart,
   FaUser,
   FaBars,
   FaTimes,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [userMenu, setUserMenu] = useState(false);
+
   const navigate = useNavigate();
   const { cartItems } = useContext(ShopContext);
+
+  const menuRef = useRef();
+
   const cartCount = cartItems.reduce(
-  (total, item) => total + item.quantity,
-  0
-);
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  // Close dropdown when clicked outside
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
+
   return (
     <nav className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between relative shadow-md">
 
@@ -24,37 +45,95 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-6 font-medium">
-        <span onClick={()=>{
-          navigate("/")
-        }} className="cursor-pointer hover:text-gray-200">Home</span>
-      
-       <span onClick={()=>{
-          navigate("/products")
-        }} className="cursor-pointer hover:text-gray-200">Products</span>
-  
-        <span onClick={()=>{
-          navigate("/about")
-        }} className="cursor-pointer hover:text-gray-200">About Us</span>
-        <span onClick={()=>{
-          navigate("/contact")
-        }} className="cursor-pointer hover:text-gray-200">Contact Us</span>
+        <span
+          onClick={() => navigate("/")}
+          className="cursor-pointer hover:text-gray-200"
+        >
+          Home
+        </span>
+
+        <span
+          onClick={() => navigate("/products")}
+          className="cursor-pointer hover:text-gray-200"
+        >
+          Products
+        </span>
+
+        <span
+          onClick={() => navigate("/about")}
+          className="cursor-pointer hover:text-gray-200"
+        >
+          About Us
+        </span>
+
+        <span
+          onClick={() => navigate("/contact")}
+          className="cursor-pointer hover:text-gray-200"
+        >
+          Contact Us
+        </span>
       </div>
 
-      {/* Icons (Desktop) */}
-      <div className="hidden md:flex items-center gap-5 text-xl">
-       <div
-  className="relative cursor-pointer"
-  onClick={() => navigate("/cart")}
->
-  <FaShoppingCart className="text-xl hover:text-gray-200" />
+      {/* Desktop Icons */}
+      <div className="hidden md:flex items-center gap-5 text-xl relative">
 
-  {cartCount > 0 && (
-    <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
-      {cartCount}
-    </span>
-  )}
-</div>
-  <FaUser onClick={() => navigate("/profile")} className="cursor-pointer hover:text-gray-200" />
+        {/* Cart */}
+        <div
+          className="relative cursor-pointer"
+          onClick={() => navigate("/cart")}
+        >
+          <FaShoppingCart className="text-xl hover:text-gray-200" />
+
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
+              {cartCount}
+            </span>
+          )}
+        </div>
+
+        {/* User Dropdown */}
+        <div className="relative" ref={menuRef}>
+          <FaUser
+            onClick={() => setUserMenu(!userMenu)}
+            className="cursor-pointer hover:text-gray-200"
+          />
+
+          {userMenu && (
+            <div className="absolute right-0 mt-3 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
+
+              <div
+                onClick={() => {
+                  navigate("/profile");
+                  setUserMenu(false);
+                }}
+                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+              >
+                Profile
+              </div>
+
+              <div
+                onClick={() => {
+                  navigate("/login");
+                  setUserMenu(false);
+                }}
+                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+              >
+                Login
+              </div>
+
+              <div
+                onClick={() => {
+                  navigate("/register");
+                  setUserMenu(false);
+                }}
+                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+              >
+                Register
+              </div>
+
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Mobile Button */}
@@ -76,23 +155,59 @@ export default function Navbar() {
             className="w-full px-3 py-2 border rounded-md outline-none"
           />
 
-          {/* Icons */}
+          {/* Mobile Icons */}
           <div className="flex justify-around text-xl py-2">
+
+            {/* Cart */}
             <div
-  className="relative"
-  onClick={() => navigate("/cart")}
->
-  <FaShoppingCart />
+              className="relative cursor-pointer"
+              onClick={() => navigate("/cart")}
+            >
+              <FaShoppingCart />
 
-  {cartCount > 0 && (
-    <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
-      {cartCount}
-    </span>
-  )}
-</div>
-            <FaUser />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-3 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+
+            {/* User */}
+            <div className="relative">
+              <FaUser
+                onClick={() => setUserMenu(!userMenu)}
+                className="cursor-pointer"
+              />
+
+              {userMenu && (
+                <div className="absolute right-0 mt-3 w-36 bg-white border rounded-lg shadow-lg text-sm">
+
+                  <div
+                    onClick={() => navigate("/profile")}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Profile
+                  </div>
+
+                  <div
+                    onClick={() => navigate("/login")}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Login
+                  </div>
+
+                  <div
+                    onClick={() => navigate("/register")}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Register
+                  </div>
+
+                </div>
+              )}
+            </div>
+
           </div>
-
         </div>
       )}
     </nav>

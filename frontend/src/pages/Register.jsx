@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
+import api from "../api/Axios";
 const Register = () => {
 const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
-    agreeTerms: false,
+    
+    
   });
 
     const handleChange = (e) => {
@@ -23,34 +24,23 @@ const [formData, setFormData] = useState({
    const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      formData.password !==
-      formData.confirmPassword
-    ) {
-      alert("Passwords do not match");
-      return;
-    }
 
     console.log(formData);
 
     // Backend API
-    /*
+    
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          password: formData.password,
-        }
-      );
+    const res = await api.post("/users/register", {
+  name: formData.name,
+  email: formData.email,
+  password: formData.password,
+});
 
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
-    */
+    
   };
 
 
@@ -114,31 +104,16 @@ const [formData, setFormData] = useState({
               </label>
 
               <input
-                type="email"
-                placeholder="Enter your email"   type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+  type="email"
+  name="email"
+  placeholder="Enter your email"
+  value={formData.email}
+  onChange={handleChange}
+  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+/>
             </div>
 
-            {/* Phone */}
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
-
-              <input
-                     type="tel"
-        name="phone"
-        placeholder="Phone Number"
-        value={formData.phone}
-        onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+           
 
             {/* Password */}
             <div>
@@ -156,40 +131,9 @@ const [formData, setFormData] = useState({
               />
             </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
+            
 
-              <input
-               type="password"
-        name="confirmPassword"
-        placeholder="Confirm Password"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
-            {/* Terms */}
-            <div className="flex items-start gap-2">
-              <input
-                 type="checkbox"
-          name="agreeTerms"
-          checked={formData.agreeTerms}
-          onChange={handleChange}
-                className="mt-1"
-              />
-
-              <label className="text-sm text-gray-600">
-                I agree to the{" "}
-                <span className="text-indigo-600 cursor-pointer">
-                  Terms & Conditions
-                </span>
-              </label>
-            </div>
-
+            
             {/* Register Button */}
             <button
               type="submit"

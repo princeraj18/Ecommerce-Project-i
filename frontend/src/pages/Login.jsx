@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../api/Axios";
 
 const Login = () => {
     
@@ -7,7 +8,8 @@ const Login = () => {
     email: "",
     password: "",
   });
-
+const [errorMessage, setErrorMessage] = useState("");
+const [successMessage, setSuccessMessage] = useState("");
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -17,15 +19,19 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+setErrorMessage("");
+  setSuccessMessage("");
     console.log(formData);
 
     // Backend API
-    /*
+    
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        formData
+      const res = await api.post(
+        "/users/login",{
+email: formData.email,
+  password: formData.password,
+        }
+        
       );
 
       console.log(res.data);
@@ -37,8 +43,13 @@ const Login = () => {
 
     } catch (error) {
       console.log(error);
+      if (error.response) {
+      setErrorMessage(error.response.data.message);
+    } else {
+      setErrorMessage("Something went wrong");
     }
-    */
+    }
+    
   };
   return (
     <div className="min-h-screen flex">
@@ -123,7 +134,19 @@ const Login = () => {
               Login
             </button>
           </form>
+{/* Error Message */}
+{errorMessage && (
+  <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+    {errorMessage}
+  </div>
+)}
 
+{/* Success Message */}
+{successMessage && (
+  <div className="mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
+    {successMessage}
+  </div>
+)}
      
 
           {/* Register Link */}
