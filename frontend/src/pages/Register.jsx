@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../api/Axios";
 const Register = () => {
+  const navigate = useNavigate();
 const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,27 +22,34 @@ const [formData, setFormData] = useState({
         type === "checkbox" ? checked : value,
     }));
   };
-   const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-
-    console.log(formData);
-
-    // Backend API
-    
-    try {
+  try {
     const res = await api.post("/users/register", {
-  name: formData.name,
-  email: formData.email,
-  password: formData.password,
-});
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    });
 
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-    
-  };
+    // Save user
+    localStorage.setItem(
+      "user",
+      JSON.stringify(res.data)
+    );
+
+    alert("Registration Successful");
+
+    navigate("/");
+  } catch (error) {
+    console.log(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Registration Failed"
+    );
+  }
+};
 
 
 

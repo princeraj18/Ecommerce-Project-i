@@ -36,6 +36,13 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handler);
     };
   }, []);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+const handleLogout = () => {
+  localStorage.removeItem("user");
+  navigate("/login");
+  setUserMenu(false);
+};
 
   return (
     <nav className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between relative shadow-md">
@@ -93,47 +100,63 @@ export default function Navbar() {
 
         {/* User Dropdown */}
         <div className="relative" ref={menuRef}>
-          <FaUser
-            onClick={() => setUserMenu(!userMenu)}
-            className="cursor-pointer hover:text-gray-200"
-          />
+  <FaUser
+    onClick={() => setUserMenu(!userMenu)}
+    className="cursor-pointer hover:text-gray-200"
+  />
 
-          {userMenu && (
-            <div className="absolute right-0 mt-3 w-40 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
+  {userMenu && (
+    <div className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
 
-              <div
-                onClick={() => {
-                  navigate("/profile");
-                  setUserMenu(false);
-                }}
-                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-              >
-                Profile
-              </div>
+      {user ? (
+        <>
+          <div className="px-4 py-3 border-b bg-gray-50 font-medium">
+            Hi, {user.name}
+          </div>
 
-              <div
-                onClick={() => {
-                  navigate("/login");
-                  setUserMenu(false);
-                }}
-                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-              >
-                Login
-              </div>
+          <div
+            onClick={() => {
+              navigate("/profile");
+              setUserMenu(false);
+            }}
+            className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+          >
+            Profile
+          </div>
 
-              <div
-                onClick={() => {
-                  navigate("/register");
-                  setUserMenu(false);
-                }}
-                className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
-              >
-                Register
-              </div>
+          <div
+            onClick={handleLogout}
+            className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-red-500"
+          >
+            Logout
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            onClick={() => {
+              navigate("/login");
+              setUserMenu(false);
+            }}
+            className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+          >
+            Login
+          </div>
 
-            </div>
-          )}
-        </div>
+          <div
+            onClick={() => {
+              navigate("/register");
+              setUserMenu(false);
+            }}
+            className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+          >
+            Register
+          </div>
+        </>
+      )}
+    </div>
+  )}
+</div>
       </div>
 
       {/* Mobile Button */}
@@ -173,39 +196,64 @@ export default function Navbar() {
             </div>
 
             {/* User */}
-            <div className="relative">
-              <FaUser
-                onClick={() => setUserMenu(!userMenu)}
-                className="cursor-pointer"
-              />
+           <div className="relative">
+  <FaUser
+    onClick={() => setUserMenu(!userMenu)}
+    className="cursor-pointer"
+  />
 
-              {userMenu && (
-                <div className="absolute right-0 mt-3 w-36 bg-white border rounded-lg shadow-lg text-sm">
+  {userMenu && (
+    <div className="absolute right-0 mt-3 w-44 bg-white border rounded-lg shadow-lg text-sm z-50">
 
-                  <div
-                    onClick={() => navigate("/profile")}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Profile
-                  </div>
+      {user ? (
+        <>
+          <div className="px-4 py-3 border-b bg-gray-50 font-medium">
+            Hi, {user.name}
+          </div>
 
-                  <div
-                    onClick={() => navigate("/login")}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Login
-                  </div>
+          <div
+            onClick={() => {
+              navigate("/profile");
+              setUserMenu(false);
+            }}
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            Profile
+          </div>
 
-                  <div
-                    onClick={() => navigate("/register")}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Register
-                  </div>
+          <div
+            onClick={handleLogout}
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
+          >
+            Logout
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            onClick={() => {
+              navigate("/login");
+              setUserMenu(false);
+            }}
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            Login
+          </div>
 
-                </div>
-              )}
-            </div>
+          <div
+            onClick={() => {
+              navigate("/register");
+              setUserMenu(false);
+            }}
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            Register
+          </div>
+        </>
+      )}
+    </div>
+  )}
+</div>
 
           </div>
         </div>

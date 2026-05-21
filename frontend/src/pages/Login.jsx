@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
 
 const Login = () => {
-    
+    const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,11 +36,15 @@ email: formData.email,
       );
 
       console.log(res.data);
-
+ localStorage.setItem(
+      "user",
+      JSON.stringify(res.data)
+    );
       localStorage.setItem(
         "token",
         res.data.token
       );
+       navigate("/");
 
     } catch (error) {
       console.log(error);
