@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-
+import axios from "axios";
+import api from "../api/Axios";
 const Checkout = () => {
   const { cartItems } = useContext(ShopContext);
 
@@ -32,32 +33,106 @@ const Checkout = () => {
     });
   };
 
-  const handlePlaceOrder = async () => {
-    const orderData = {
-      shippingInfo: shippingData,
-      paymentMethod,
-      products: cartItems,
-      subtotal,
-      shippingCharge: SHIPPING_CHARGE,
-      totalAmount: total,
-    };
+const handlePlaceOrder = async () => {
+  // Validation
+  if (
+    !shippingData.fullName.trim() ||
+    !shippingData.phone.trim() ||
+    !shippingData.email.trim() ||
+    !shippingData.city.trim() ||
+    !shippingData.state.trim() ||
+    !shippingData.pincode.trim() ||
+    !shippingData.address.trim()
+  ) {
+    alert("Please fill all shipping details.");
+    return;
+  }
 
-    console.log(orderData);
+  // Phone validation
+  if (!/^[0-9]{10}$/.test(shippingData.phone)) {
+    alert("Please enter a valid 10-digit phone number.");
+    return;
+  }
 
-    // Backend API call
-    /*
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/orders/create",
-        orderData
-      );
+  // Email validation
+  if (
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+      shippingData.email
+    )
+  ) {
+    alert("Please enter a valid email address.");
+    return;
+  }
 
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+  // Pincode validation
+  if (!/^[0-9]{6}$/.test(shippingData.pincode)) {
+    alert("Please enter a valid 6-digit pincode.");
+    return;
+  }
+
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    // CASH ON DELIVERY
+    if (paymentMethod === "cod") {
+const orderRes = await api.post(
+  "/orders/create",
+  {
+    userId: user._id,
+    cartItems,
+    shippingData,
+    total,
+    paymentMethod: "COD",
+    paymentStatus: "Pending",
+  }
+);
+
+console.log("Order Response:", orderRes.data);
+
+localStorage.setItem(
+  "lastOrderId",
+  orderRes.data._id
+);
+
+window.location.href = "/payment-success";
+      return;
     }
-    */
-  };
+
+    // STRIPE PAYMENT
+    const res = await api.post(
+  "/payment/create-checkout-session",
+  {
+    cartItems,
+    total,
+    userId: user._id,
+    shippingData,
+  }
+);
+
+localStorage.setItem(
+  "lastOrderId",
+  res.data.orderId
+);
+
+window.location.href = res.data.url;
+
+    // localStorage.setItem(
+    //   "lastOrder",
+    //   JSON.stringify({
+    //     products: cartItems,
+    //     total,
+    //     paymentMethod: "Card",
+    //   })
+    // );
+
+    // window.location.href = res.data.url;
+  } catch (error) {
+    console.log(error);
+    alert("Failed to place order");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 lg:px-10">
@@ -87,12 +162,14 @@ const Checkout = () => {
                   placeholder="Full Name"
                   value={shippingData.fullName}
                   onChange={handleChange}
+                  required
                   className="border rounded-lg px-4 py-3"
                 />
 
                 <input
                   type="tel"
                   name="phone"
+                  required
                   placeholder="Phone Number"
                   value={shippingData.phone}
                   onChange={handleChange}
@@ -103,6 +180,7 @@ const Checkout = () => {
                   type="email"
                   name="email"
                   placeholder="Email Address"
+                  required
                   value={shippingData.email}
                   onChange={handleChange}
                   className="border rounded-lg px-4 py-3"
@@ -112,6 +190,7 @@ const Checkout = () => {
                   type="text"
                   name="city"
                   placeholder="City"
+                  required
                   value={shippingData.city}
                   onChange={handleChange}
                   className="border rounded-lg px-4 py-3"
@@ -120,6 +199,7 @@ const Checkout = () => {
                 <input
                   type="text"
                   name="state"
+                  required
                   placeholder="State"
                   value={shippingData.state}
                   onChange={handleChange}
@@ -129,6 +209,7 @@ const Checkout = () => {
                 <input
                   type="text"
                   name="pincode"
+                  required
                   placeholder="Pincode"
                   value={shippingData.pincode}
                   onChange={handleChange}
@@ -140,6 +221,7 @@ const Checkout = () => {
               <textarea
                 rows="4"
                 name="address"
+                required
                 placeholder="Full Address"
                 value={shippingData.address}
                 onChange={handleChange}
@@ -168,17 +250,7 @@ const Checkout = () => {
                   Cash On Delivery
                 </label>
 
-                <label className="flex items-center gap-3 border rounded-lg p-4">
-                  <input
-                    type="radio"
-                    value="upi"
-                    checked={paymentMethod === "upi"}
-                    onChange={(e) =>
-                      setPaymentMethod(e.target.value)
-                    }
-                  />
-                  UPI Payment
-                </label>
+               
 
                 <label className="flex items-center gap-3 border rounded-lg p-4">
                   <input
@@ -250,12 +322,11 @@ const Checkout = () => {
               </div>
 
               <button
-                onClick={handlePlaceOrder}
-                className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg"
-              >
-                Place Order
-              </button>
-
+  onClick={handlePlaceOrder}
+  className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-lg"
+>
+  Place Order
+</button>
             </div>
           </div>
 

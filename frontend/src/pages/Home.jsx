@@ -16,7 +16,7 @@ const Home = () => {
           </h1>
 
           <p className="mt-6 text-lg text-gray-200">
-            Shop the latest gadgets, electronics and fashion products at
+            Shop the latest Collections, Clothing and fashion products at
             unbeatable prices.
           </p>
 
@@ -33,7 +33,7 @@ const Home = () => {
 
         <div className="hidden lg:block">
           <img
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
+            src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2xvdGhlcyUyMHNob3B8ZW58MHx8MHx8fDA%3D"
             alt="hero"
             className="w-[500px] rounded-3xl shadow-2xl"
           />

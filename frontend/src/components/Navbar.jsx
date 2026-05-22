@@ -98,8 +98,7 @@ const handleLogout = () => {
           )}
         </div>
 
-        {/* User Dropdown */}
-        <div className="relative" ref={menuRef}>
+       <div className="relative" ref={menuRef}>
   <FaUser
     onClick={() => setUserMenu(!userMenu)}
     className="cursor-pointer hover:text-gray-200"
@@ -122,6 +121,16 @@ const handleLogout = () => {
             className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
           >
             Profile
+          </div>
+
+          <div
+            onClick={() => {
+              navigate("/orders");
+              setUserMenu(false);
+            }}
+            className="px-4 py-3 hover:bg-gray-100 cursor-pointer"
+          >
+            My Orders
           </div>
 
           <div
@@ -196,7 +205,7 @@ const handleLogout = () => {
             </div>
 
             {/* User */}
-           <div className="relative">
+      <div className="relative">
   <FaUser
     onClick={() => setUserMenu(!userMenu)}
     className="cursor-pointer"
@@ -219,6 +228,16 @@ const handleLogout = () => {
             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
           >
             Profile
+          </div>
+
+          <div
+            onClick={() => {
+              navigate("/orders");
+              setUserMenu(false);
+            }}
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+          >
+            My Orders
           </div>
 
           <div

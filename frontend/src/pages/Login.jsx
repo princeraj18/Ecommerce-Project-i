@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
+import { ShopContext } from "../context/ShopContext";
 
 const Login = () => {
     const navigate = useNavigate();
-
+const { loginUser } = useContext(ShopContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,45 +18,51 @@ const [successMessage, setSuccessMessage] = useState("");
       [e.target.name]: e.target.value,
     }));
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-setErrorMessage("");
+  setErrorMessage("");
   setSuccessMessage("");
-    console.log(formData);
 
-    // Backend API
-    
-    try {
-      const res = await api.post(
-        "/users/login",{
-email: formData.email,
-  password: formData.password,
-        }
-        
-      );
+  try {
+    const res = await api.post("/users/login", {
+      email: formData.email,
+      password: formData.password,
+    });
 
-      console.log(res.data);
- localStorage.setItem(
+    console.log(res.data);
+
+    // Save user in Context
+    loginUser(res.data);
+
+    // Save complete user object
+    localStorage.setItem(
       "user",
       JSON.stringify(res.data)
     );
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
-       navigate("/");
 
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
+    // Save token separately if needed
+    localStorage.setItem(
+      "token",
+      res.data.token
+    );
+
+    setSuccessMessage("Login Successful!");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+
+  } catch (error) {
+    console.log(error);
+
+    if (error.response) {
       setErrorMessage(error.response.data.message);
     } else {
       setErrorMessage("Something went wrong");
     }
-    }
-    
-  };
+  }
+};
   return (
     <div className="min-h-screen flex">
       {/* Left Section */}

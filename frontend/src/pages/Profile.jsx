@@ -1,12 +1,14 @@
 // UserProfile.jsx
 
 import React, { useEffect, useState } from "react";
-
+import { useContext } from "react";
+import { ShopContext } from "../context/ShopContext";
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+const { user } = useContext(ShopContext);
 
   // User data fetched from registration/localStorage/API
-  const [user, setUser] = useState({
+  const [users, setUsers] = useState({
     fullName: "",
     email: "",
     phone: "",
@@ -24,24 +26,24 @@ const UserProfile = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     if (storedUser) {
-      setUser(storedUser);
+      setUsers(storedUser);
     }
   }, []);
 
   // Handle Input Change
   const handleChange = (e) => {
-    setUser({
-      ...user,
+    setUsers({
+      ...users,
       [e.target.name]: e.target.value,
     });
   };
 
   // Save Updated Profile
   const handleSave = () => {
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(users));
 
     // Optional API Call
-    // axios.put("/api/user/update", user)
+    // axios.put("/api/user/update", users)
 
     setIsEditing(false);
   };
@@ -57,7 +59,7 @@ const UserProfile = () => {
           <div className="absolute -bottom-16 left-10">
             <img
               src={
-                user.profileImage ||
+                users.profileImage ||
                 "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               }
               alt="profile"
@@ -74,7 +76,7 @@ const UserProfile = () => {
 
             <div>
               <h1 className="text-4xl font-bold text-gray-800">
-                {user.fullName || "User Name"}
+                {user?.name} 
               </h1>
 
               <p className="text-gray-500 mt-2">
@@ -111,7 +113,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="fullName"
-                  value={user.fullName}
+                  value={users.fullName}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -131,7 +133,7 @@ const UserProfile = () => {
                 <input
                   type="email"
                   name="email"
-                  value={user.email}
+                  value={users.email}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -151,7 +153,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="phone"
-                  value={user.phone}
+                  value={users.phone}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -170,7 +172,7 @@ const UserProfile = () => {
 
                 <select
                   name="gender"
-                  value={user.gender}
+                  value={users.gender}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -199,7 +201,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="address"
-                  value={user.address}
+                  value={users.address}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -219,7 +221,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="city"
-                  value={user.city}
+                  value={users.city}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -239,7 +241,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="state"
-                  value={user.state}
+                  value={users.state}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${
@@ -259,7 +261,7 @@ const UserProfile = () => {
                 <input
                   type="text"
                   name="pincode"
-                  value={user.pincode}
+                  value={users.pincode}
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={`w-full px-4 py-3 rounded-xl border ${

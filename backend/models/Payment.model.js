@@ -14,21 +14,14 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
+    stripeSessionId: {
+      type: String,
+    },
+
     paymentMethod: {
       type: String,
-      enum: ["COD", "CARD", "UPI", "WALLET"],
+      enum: ["COD", "CARD", "UPI"],
       required: true,
-    },
-
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "success", "failed"],
-      default: "pending",
-    },
-
-    transactionId: {
-      type: String,
-      default: null,
     },
 
     amount: {
@@ -36,14 +29,10 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
-    currency: {
+    paymentStatus: {
       type: String,
-      default: "INR",
-    },
-
-    paidAt: {
-      type: Date,
-      default: null,
+      enum: ["Pending", "Completed", "Failed"],
+      default: "Pending",
     },
   },
   {
