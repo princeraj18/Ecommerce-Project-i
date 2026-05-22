@@ -1,5 +1,34 @@
 import Product from "../models/Product.model.js";
 
+const normalizeArray = (value) => {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch {
+      return value ? [value] : [];
+    }
+  }
+
+  return [];
+};
+
+const normalizeBoolean = (value) => {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    return value.toLowerCase() === "true";
+  }
+
+  return false;
+};
+
 // ---------------- CREATE PRODUCT (ADMIN) ----------------
 export const createProduct = async (req, res) => {
   try {
@@ -8,8 +37,11 @@ export const createProduct = async (req, res) => {
       description,
       price,
       image,
+      images,
+      stock,
       category,
       subCategory,
+      subcategory,
       sizes,
       bestseller,
     } = req.body;
@@ -17,12 +49,13 @@ export const createProduct = async (req, res) => {
     const product = await Product.create({
       name,
       description,
-      price,
-      image,
+      price: Number(price),
+      stock: stock !== undefined ? Number(stock) : 0,
+      image: normalizeArray(image ?? images),
       category,
-      subCategory,
-      sizes,
-      bestseller,
+      subCategory: subCategory ?? subcategory,
+      sizes: normalizeArray(sizes),
+      bestseller: normalizeBoolean(bestseller),
       date: Date.now(),
     });
 
@@ -92,9 +125,32 @@ export const updateProduct = async (req, res) => {
       });
     }
 
+    const updatedData = {
+      ...req.body,
+      price: req.body.price !== undefined ? Number(req.body.price) : undefined,
+      stock: req.body.stock !== undefined ? Number(req.body.stock) : undefined,
+      image: req.body.image ?? req.body.images,
+      subCategory: req.body.subCategory ?? req.body.subcategory,
+      sizes: req.body.sizes !== undefined ? normalizeArray(req.body.sizes) : undefined,
+      bestseller:
+        req.body.bestseller !== undefined
+          ? normalizeBoolean(req.body.bestseller)
+          : undefined,
+    };
+
+    Object.keys(updatedData).forEach((key) => {
+      if (updatedData[key] === undefined) {
+        delete updatedData[key];
+      }
+    });
+
+    if (updatedData.image !== undefined) {
+      updatedData.image = normalizeArray(updatedData.image);
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updatedData,
       { new: true }
     );
 

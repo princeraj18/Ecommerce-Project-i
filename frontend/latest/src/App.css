@@ -1,42 +1,171 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.hero-shell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.2), transparent 30%),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.16), transparent 24%),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 40%),
+    linear-gradient(180deg, #020617 0%, #0b1120 55%, #020617 100%);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.hero-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 88%);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.hero-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0) 0%, rgba(2, 6, 23, 0.38) 100%);
+  pointer-events: none;
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(72px);
+  pointer-events: none;
+  animation: floatGlow 12s ease-in-out infinite;
+}
+
+.hero-glow-left {
+  top: 12%;
+  left: -8rem;
+  height: 22rem;
+  width: 22rem;
+  background: rgba(34, 211, 238, 0.16);
+}
+
+.hero-glow-right {
+  right: -6rem;
+  top: 18%;
+  height: 18rem;
+  width: 18rem;
+  background: rgba(56, 189, 248, 0.14);
+  animation-delay: -3s;
+}
+
+.section-shell {
+  position: relative;
+  padding: 5rem 0;
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.07), transparent 32%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.62), rgba(2, 6, 23, 0.97));
+}
+
+.section-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%);
+  pointer-events: none;
+}
+
+.section-shell-muted {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.06), transparent 28%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.97), rgba(15, 23, 42, 0.9));
+}
+
+.section-heading {
+  max-width: 42rem;
+}
+
+.section-kicker {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgb(165 243 252);
+}
+
+.section-title {
+  margin-top: 0.75rem;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 1.08;
+  font-weight: 900;
+  color: white;
+  text-wrap: balance;
+}
+
+.section-copy {
+  margin-top: 1rem;
+  max-width: 38rem;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgb(203 213 225);
+}
+
+.feature-card {
+  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.08), transparent 45%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card:hover {
+  box-shadow: 0 24px 60px rgba(2, 132, 199, 0.14);
+}
+
+button,
+a,
+.feature-card {
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.9);
+  outline-offset: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes floatGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.06);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow,
+  .feature-card,
+  button,
+  a {
+    animation: none !important;
+    transition: none !important;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

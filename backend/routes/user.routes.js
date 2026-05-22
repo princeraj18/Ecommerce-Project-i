@@ -6,7 +6,7 @@ import {
   getUserProfile,
 } from "../controllers/user.controller.js";
 
-import { protect } from "../middleware/auth.middlewar.js ";
+import { protect } from "../middleware/auth.middlewar.js";
 
 const router = express.Router();
 

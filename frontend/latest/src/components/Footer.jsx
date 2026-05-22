@@ -1,78 +1,88 @@
 import React from "react";
-import { FaFacebook, FaInstagram, FaTwitter, FaShoppingBag } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
- function Footer() {
-  const navigate = useNavigate();
+import { FaFacebook, FaInstagram, FaShoppingBag, FaTwitter } from "react-icons/fa";
+
+const footerLinks = [
+  { label: "Home", target: "home" },
+  { label: "Products", target: "products" },
+  { label: "About", target: "about" },
+  { label: "Contact", target: "contact" },
+];
+
+function scrollToSection(target) {
+  const element = document.getElementById(target);
+
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function Footer() {
   return (
-    <footer className="bg-gray-900 text-white mt-10">
-
-      {/* Top Section */}
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-
-        {/* Brand */}
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <FaShoppingBag /> ShopEase
-          </h2>
-          <p className="text-gray-400 mt-3 text-sm">
-            Your one-stop destination for all shopping needs. Best deals, best prices.
+    <footer className="border-t border-white/10 bg-slate-950">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-sky-500 text-slate-950">
+              <FaShoppingBag />
+            </span>
+            <div>
+              <h2 className="text-xl font-black text-white">ShopEase</h2>
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                Modern e-commerce UI
+              </p>
+            </div>
+          </div>
+          <p className="max-w-xs text-sm leading-6 text-slate-400">
+            A responsive storefront built for clarity, speed, and a premium
+            look across every screen size.
           </p>
         </div>
 
-        {/* Links */}
         <div>
-          <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
-          <ul className="space-y-2 text-gray-400">
-            <li
-            onClick={()=>{
-              navigate("/")
-            }}
-             className="hover:text-white cursor-pointer">Home</li>
-            <li
-             onClick={()=>{
-               navigate("/about")
-             }}
-             className="hover:text-white cursor-pointer">About</li>
-            <li
-             onClick={()=>{
-               navigate("/products")
-             }}
-             className="hover:text-white cursor-pointer">Products</li>
-            <li
-             onClick={()=>{
-               navigate("/contact")
-             }}
-             className="hover:text-white cursor-pointer">Contact</li>
-          </ul>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-200">
+            Quick links
+          </h3>
+          <div className="mt-4 flex flex-col gap-3">
+            {footerLinks.map((item) => (
+              <button
+                key={item.target}
+                type="button"
+                onClick={() => scrollToSection(item.target)}
+                className="w-fit text-sm text-slate-400 transition hover:text-white"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Customer */}
         <div>
-          <h3 className="text-lg font-semibold mb-3">Customer Care</h3>
-          <ul className="space-y-2 text-gray-400">
-            <li className="hover:text-white cursor-pointer">FAQ</li>
-            <li className="hover:text-white cursor-pointer">Shipping</li>
-            <li className="hover:text-white cursor-pointer">Returns</li>
-            <li className="hover:text-white cursor-pointer">Support</li>
-          </ul>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-200">
+            Customer care
+          </h3>
+          <div className="mt-4 flex flex-col gap-3 text-sm text-slate-400">
+            <span>FAQ</span>
+            <span>Shipping</span>
+            <span>Returns</span>
+            <span>Support</span>
+          </div>
         </div>
 
-        {/* Social */}
         <div>
-          <h3 className="text-lg font-semibold mb-3">Follow Us</h3>
-          <div className="flex gap-4 text-xl">
-            <FaFacebook className="hover:text-blue-500 cursor-pointer" />
-            <FaInstagram className="hover:text-pink-500 cursor-pointer" />
-            <FaTwitter className="hover:text-sky-400 cursor-pointer" />
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-200">
+            Follow us
+          </h3>
+          <div className="mt-4 flex gap-4 text-xl text-slate-300">
+            <FaFacebook className="cursor-pointer transition hover:text-cyan-300" />
+            <FaInstagram className="cursor-pointer transition hover:text-pink-400" />
+            <FaTwitter className="cursor-pointer transition hover:text-sky-400" />
           </div>
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="border-t border-gray-700 text-center py-4 text-gray-500 text-sm">
-        © {new Date().getFullYear()} ShopEase. All rights reserved.
+      <div className="border-t border-white/10 py-4 text-center text-sm text-slate-500">
+        &copy; {new Date().getFullYear()} ShopEase. All rights reserved.
       </div>
-
     </footer>
   );
 }

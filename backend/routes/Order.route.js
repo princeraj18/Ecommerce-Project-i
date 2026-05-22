@@ -12,14 +12,25 @@ import { protect } from "../middleware/auth.middlewar.js";
 
 const router = express.Router();
 
-router.post("/createOrder", protect, createOrder);
 
-router.get("/userOrders", protect, getUserOrders);
+// Create order
+router.post("/", protect, createOrder);
 
-router.get("/singleOrder/:id", protect, getSingleOrder);
 
-router.put("/updateOrderStatus/:id", protect, updateOrderStatus);
+// Get all logged-in user orders
+router.get("/", protect, getUserOrders);
 
-router.delete("/deleteOrder/:id", protect, deleteOrder);
+
+// Get single order
+router.get("/:id", protect, getSingleOrder);
+
+
+// Update order
+router.put("/:id", protect, updateOrderStatus);
+
+
+// Delete order
+router.delete("/:id", protect, deleteOrder);
+
 
 export default router;
